@@ -25,6 +25,11 @@ class AppConstants {
   static const double paddingLarge = 24.0;
   static const double paddingXLarge = 32.0;
 
+  // Spacing (for SizedBox and gaps)
+  static const double spacingSmall = 8.0;
+  static const double spacingMedium = 16.0;
+  static const double spacingLarge = 24.0;
+
   // Icon Sizes
   static const double iconSizeSmall = 20.0;
   static const double iconSizeMedium = 24.0;
@@ -88,7 +93,7 @@ class AppConstants {
   // Navigation Labels
   static const String home = 'Home';
   static const String activities = 'Notes';
-  static const String settings = 'Exam Ques';
+  static const String settings = 'Task';
 
   // Asset Paths (if needed)
   static const String assetImagesPath = 'assets/images/';

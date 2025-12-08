@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:global_ders/features/profile/profile_sub_screens/about_screen.dart';
+import 'package:global_ders/features/profile/profile_sub_screens/privacy_policy.dart';
+import 'package:global_ders/features/profile/profile_sub_screens/terms_and_condition.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/constants/app_constants.dart';
@@ -22,15 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: AppColors.darkBackground,
       appBar: AppBar(
         backgroundColor: AppColors.darkBackground,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            color: AppColors.darkIconPrimary,
-          ),
-        ),
+        elevation: 0,
         title: Text(AppConstants.profile, style: AppTextStyles.h5()),
         centerTitle: true,
       ),
@@ -39,22 +34,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Profile Header
-            const ProfileHeader(
-              userName: 'User Name',
-              userEmail: 'hello@user.com',
+            Align(
+              alignment: Alignment.center,
+              child: const ProfileHeader(
+                userName: 'User Name',
+                userEmail: 'hello@user.com',
+              ),
             ),
 
-            // Edit Profile
-            SettingsListItem(
-              icon: Icons.edit_rounded,
-              title: AppConstants.editProfile,
-              iconBackgroundColor: AppColors.white,
-              onTap: () {
-                // Navigate to edit profile
-              },
-            ),
-
-            const SizedBox(height: AppConstants.paddingLarge),
+            // // Edit Profile
+            // SettingsListItem(
+            //   icon: Icons.edit_rounded,
+            //   title: AppConstants.editProfile,
+            //   iconBackgroundColor: AppColors.white,
+            //   onTap: () {
+            //     // Navigate to edit profile
+            //   },
+            // ),
+            const SizedBox(height: AppConstants.paddingMedium),
 
             // General Settings Header
             Padding(
@@ -85,15 +82,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
 
-            // Language
-            SettingsListItem(
-              icon: Icons.language_rounded,
-              title: AppConstants.language,
-              iconBackgroundColor: AppColors.white,
-              onTap: () {
-                // Navigate to language settings
-              },
-            ),
+            // // Language
+            // SettingsListItem(
+            //   icon: Icons.language_rounded,
+            //   title: AppConstants.language,
+            //   iconBackgroundColor: AppColors.white,
+            //   onTap: () {
+            //     // Navigate to language settings
+            //   },
+            // ),
 
             // About
             SettingsListItem(
@@ -102,6 +99,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               iconBackgroundColor: AppColors.white,
               onTap: () {
                 // Navigate to about page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AboutScreen()),
+                );
               },
             ),
 
@@ -112,6 +113,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               iconBackgroundColor: AppColors.white,
               onTap: () {
                 // Navigate to terms & conditions
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TermsAndCondition(),
+                  ),
+                );
               },
             ),
 
@@ -122,6 +129,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               iconBackgroundColor: AppColors.white,
               onTap: () {
                 // Navigate to privacy policy
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PrivacyPolicy(),
+                  ),
+                );
               },
             ),
 

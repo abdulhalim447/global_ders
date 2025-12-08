@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:global_ders/core/pdf_viewer/pdf_view_screen.dart';
+import 'package:global_ders/features/notepad/presentation/pages/notes_list_screen.dart';
+import 'package:global_ders/features/notes/pages/notes_screen.dart';
+import 'package:global_ders/features/webview_screen.dart';
 import 'package:pdfrx/pdfrx.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_constants.dart';
@@ -56,9 +58,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const Placeholder(), // Activities screen
-    const Placeholder(), // Center button action
-    const Placeholder(), // Settings screen
+    const NotesScreen(), // Activities screen
+    const WebViewScreen(), // Center button action
+    const NotesListScreen(), // Settings screen
     const ProfileScreen(),
   ];
 

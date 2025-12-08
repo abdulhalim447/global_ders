@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:global_ders/core/pdf_viewer/pdf_view_screen.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/constants/app_constants.dart';
@@ -41,10 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: AppConstants.paddingMedium),
-                    const CustomSearchBar(),
-                    const SizedBox(height: AppConstants.paddingLarge),
                     _buildMathBooksSection(),
-                    const SizedBox(height: AppConstants.paddingLarge),
+                    const SizedBox(height: AppConstants.paddingMedium),
                     _buildRecommendedSection(),
                     const SizedBox(height: AppConstants.paddingLarge),
                   ],
@@ -159,22 +158,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(AppConstants.mathBooks, style: AppTextStyles.sectionTitle()),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                AppConstants.viewAll,
-                style: AppTextStyles.labelMedium(color: AppColors.accentGreen),
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: AppConstants.paddingMedium),
-
         // Video card
         const VideoCourseCard(title: "Mathematics"),
 
@@ -204,12 +187,165 @@ class _HomeScreenState extends State<HomeScreen> {
 
         const SizedBox(height: AppConstants.paddingMedium),
 
-        // Course list
-        const CourseListItem(title: 'Mathematics 01'),
-        const CourseListItem(title: 'Mathematics 02'),
-        const CourseListItem(title: 'Mathematics 03'),
+        // Course list - changes based on selected filter
+        ..._getCourseListByFilter(),
       ],
     );
+  }
+
+  /// Returns different course lists based on selected filter
+  List<Widget> _getCourseListByFilter() {
+    switch (_selectedFilterIndex) {
+      case 0: // All Levels - Mathematics
+        return [
+          CourseListItem(
+            title: 'Mathematics 01',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PdfViewScreen(
+                    pdfPath: 'https://app.global-ders.com/pdf/begginer_1.pdf',
+                  ),
+                ),
+              );
+            },
+          ),
+          CourseListItem(
+            title: 'Mathematics 02',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PdfViewScreen(
+                    pdfPath: 'https://app.global-ders.com/pdf/begginer_2.pdf',
+                  ),
+                ),
+              );
+            },
+          ),
+          CourseListItem(
+            title: 'Mathematics 03',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PdfViewScreen(
+                    pdfPath: 'https://app.global-ders.com/pdf/begginer_3.pdf',
+                  ),
+                ),
+              );
+            },
+          ),
+          CourseListItem(
+            title: 'Mathematics 01',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PdfViewScreen(
+                    pdfPath:
+                        'https://app.global-ders.com/pdf/intermidiate_1.pdf',
+                  ),
+                ),
+              );
+            },
+          ),
+          CourseListItem(
+            title: 'Mathematics 02',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PdfViewScreen(
+                    pdfPath:
+                        'https://app.global-ders.com/pdf/intermediate_2.pdf',
+                  ),
+                ),
+              );
+            },
+          ),
+        ];
+      case 1: // Beginner - Mathematics
+        return [
+          CourseListItem(
+            title: 'Mathematics 01',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PdfViewScreen(
+                    pdfPath: 'https://app.global-ders.com/pdf/begginer_1.pdf',
+                  ),
+                ),
+              );
+            },
+          ),
+          CourseListItem(
+            title: 'Mathematics 02',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PdfViewScreen(
+                    pdfPath: 'https://app.global-ders.com/pdf/beginer2.pdf',
+                  ),
+                ),
+              );
+            },
+          ),
+          CourseListItem(
+            title: 'Mathematics 03',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PdfViewScreen(
+                    pdfPath: 'https://app.global-ders.com/pdf/beginer_3.pdf',
+                  ),
+                ),
+              );
+            },
+          ),
+        ];
+      case 2: // Intermediate - Mathematics
+        return [
+          CourseListItem(
+            title: 'Mathematics 01',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PdfViewScreen(
+                    pdfPath:
+                        'https://app.global-ders.com/pdf/intermidiate_1.pdf',
+                  ),
+                ),
+              );
+            },
+          ),
+          CourseListItem(
+            title: 'Mathematics 02',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PdfViewScreen(
+                    pdfPath:
+                        'https://app.global-ders.com/pdf/intermediate_2.pdf',
+                  ),
+                ),
+              );
+            },
+          ),
+        ];
+      default:
+        return [
+          CourseListItem(title: 'Mathematics 01', onTap: () {}),
+          CourseListItem(title: 'Mathematics 02', onTap: () {}),
+          CourseListItem(title: 'Mathematics 03', onTap: () {}),
+        ];
+    }
   }
 
   Widget _buildRecommendedSection() {

@@ -45,7 +45,7 @@ class CustomBottomNavigation extends StatelessWidget {
           ),
           _buildCenterButton(),
           _buildNavItem(
-            icon: Icons.settings_rounded,
+            icon: Icons.note_add,
             label: AppConstants.settings,
             index: 3,
             isSelected: currentIndex == 3,
@@ -113,7 +113,7 @@ class CustomBottomNavigation extends StatelessWidget {
       ),
       child: IconButton(
         onPressed: () => onTap(2),
-        icon: const Icon(Icons.eco_rounded, color: AppColors.black, size: 28),
+        icon: Image.asset('assets/logo/nav_logo.png', fit: BoxFit.fill),
       ),
     );
   }
