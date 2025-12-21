@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:global_ders/features/auth/presentation/pages/login_screen.dart';
 import 'package:global_ders/features/notepad/presentation/pages/notes_list_screen.dart';
 import 'package:global_ders/features/notes/pages/notes_screen.dart';
 import 'package:global_ders/features/webview_screen.dart';
@@ -10,7 +11,7 @@ import 'core/constants/app_constants.dart';
 import 'core/widgets/custom_bottom_navigation.dart';
 import 'features/home/presentation/pages/home_screen.dart';
 import 'features/profile/presentation/pages/profile_screen.dart';
-//import 'features/auth/presentation/pages/login_screen.dart';
+import 'features/auth/presentation/providers/login_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,13 +35,35 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Check if user is logged in
+    final isLoggedInAsync = ref.watch(isLoggedInProvider);
+
     return MaterialApp(
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
-      home: const MainNavigationScreen(),
+      home: isLoggedInAsync.when(
+        data: (isLoggedIn) {
+          // If logged in, show MainNavigationScreen, otherwise show LoginScreen
+          if (isLoggedIn) {
+            return const MainNavigationScreen();
+          } else {
+            return const LoginScreen();
+          }
+        },
+        loading: () => const Scaffold(
+          backgroundColor: Color(0xFF0A0E21),
+          body: Center(
+            child: CircularProgressIndicator(color: Color(0xFF00D9A3)),
+          ),
+        ),
+        error: (error, stack) {
+          // On error, show LoginScreen
+          return const LoginScreen();
+        },
+      ),
     );
   }
 }

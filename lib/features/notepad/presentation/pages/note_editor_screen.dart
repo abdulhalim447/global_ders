@@ -196,7 +196,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     }
 
     return PopScope(
-      canPop: false,
+      canPop: !_hasChanges,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         await _handleBackPress();

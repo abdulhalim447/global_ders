@@ -51,6 +51,12 @@ dependencies:
   
   # WebView
   webview_flutter: ^4.4.4
+  
+  # Image picker
+  image_picker: ^1.0.7
+  
+  # Share functionality
+  share_plus: ^10.1.2
 
 dev_dependencies:
   flutter_test:

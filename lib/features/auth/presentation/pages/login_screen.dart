@@ -1,36 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:global_ders/main.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/constants/app_constants.dart';
+
 import '../widgets/custom_text_field.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/contact_icon_button.dart';
+import '../providers/login_provider.dart';
 import 'signup_screen.dart';
 
 /// Login screen for authentication
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+
+  final _passwordController = TextEditingController();
   bool _agreedToTerms = false;
-  bool _isLoading = false;
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  void _handleContinue() {
+  Future<void> _handleContinue() async {
     if (_formKey.currentState!.validate()) {
       if (!_agreedToTerms) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -44,25 +49,38 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
-      setState(() {
-        _isLoading = true;
-      });
+      final success = await ref
+          .read(loginProvider.notifier)
+          .login(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
 
-      // Simulate login process
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-          // Navigate to home or show success
+      if (mounted) {
+        final state = ref.read(loginProvider);
+
+        if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Login successful!'),
+            SnackBar(
+              content: Text(state.successMessage ?? 'Login successful!'),
               backgroundColor: AppColors.success,
             ),
           );
+
+          // Navigate to home screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.error ?? 'Login failed'),
+              backgroundColor: AppColors.error,
+            ),
+          );
         }
-      });
+      }
     }
   }
 
@@ -177,24 +195,37 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       children: [
         CustomTextField(
-          hintText: 'Name',
-          controller: _nameController,
-          keyboardType: TextInputType.name,
+          hintText: 'Email',
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter your name';
+              return 'Please enter your email';
             }
             return null;
           },
         ),
         const SizedBox(height: 16),
         CustomTextField(
-          hintText: 'E-mail / Username',
-          controller: _emailController,
-          keyboardType: TextInputType.emailAddress,
+          hintText: 'Password',
+          controller: _passwordController,
+          obscureText: _obscurePassword,
+          keyboardType: TextInputType.visiblePassword,
+          suffixIcon: IconButton(
+            icon: Icon(
+              _obscurePassword ? Icons.visibility_off : Icons.visibility,
+              color: AppColors.darkIconSecondary,
+              size: 20,
+            ),
+            onPressed: () {
+              setState(() {
+                _obscurePassword = !_obscurePassword;
+              });
+            },
+          ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter your email or username';
+              return 'Please enter your password';
             }
             return null;
           },
@@ -267,10 +298,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildContinueButton() {
+    final loginState = ref.watch(loginProvider);
     return CustomButton(
       text: 'CONTINUE',
       onPressed: _handleContinue,
-      isLoading: _isLoading,
+      isLoading: loginState.isLoading,
     );
   }
 

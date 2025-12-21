@@ -1,28 +1,30 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/contact_icon_button.dart';
+import '../providers/signup_provider.dart';
 import 'login_screen.dart';
 
 /// Signup screen for authentication
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _agreedToTerms = false;
-  bool _isLoading = false;
   bool _obscurePassword = true;
 
   @override
@@ -33,7 +35,7 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  void _handleContinue() {
+  Future<void> _handleContinue() async {
     if (_formKey.currentState!.validate()) {
       if (!_agreedToTerms) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -47,30 +49,46 @@ class _SignupScreenState extends State<SignupScreen> {
         return;
       }
 
-      setState(() {
-        _isLoading = true;
-      });
+      final success = await ref
+          .read(signupProvider.notifier)
+          .register(
+            name: _nameController.text.trim(),
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
 
-      // Simulate signup process
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-          // Navigate to home or show success
+      if (mounted) {
+        final state = ref.read(signupProvider);
+
+        if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Signup successful!'),
+            SnackBar(
+              content: Text(state.successMessage ?? 'Registration successful!'),
               backgroundColor: AppColors.success,
             ),
           );
+
+          // Navigate to login screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.error ?? 'Registration failed'),
+              backgroundColor: AppColors.error,
+            ),
+          );
         }
-      });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final signupState = ref.watch(signupProvider);
+
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
       body: SafeArea(
@@ -85,15 +103,15 @@ class _SignupScreenState extends State<SignupScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 40),
-                  _buildHeader(),
-                  const SizedBox(height: 60),
                   _buildWelcomeText(),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 32),
+                  _buildProfileImagePicker(signupState),
+                  const SizedBox(height: 24),
                   _buildForm(),
                   const SizedBox(height: 20),
                   _buildTermsCheckbox(),
                   const SizedBox(height: 32),
-                  _buildContinueButton(),
+                  _buildContinueButton(signupState.isLoading),
                   const SizedBox(height: 24),
                   _buildSignInLink(),
                   const SizedBox(height: 32),
@@ -143,7 +161,6 @@ class _SignupScreenState extends State<SignupScreen> {
     return Container(
       width: 60,
       height: 60,
-
       child: ClipOval(
         child: Image.asset('assets/logo/logo.jpg', fit: BoxFit.cover),
       ),
@@ -173,6 +190,82 @@ class _SignupScreenState extends State<SignupScreen> {
           style: AppTextStyles.bodyMedium(color: AppColors.darkTextSecondary),
         ),
       ],
+    );
+  }
+
+  Widget _buildProfileImagePicker(SignupState state) {
+    return Center(
+      child: GestureDetector(
+        onTap: () => ref.read(signupProvider.notifier).pickImage(),
+        child: Stack(
+          children: [
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.darkSurface,
+                border: Border.all(color: AppColors.accentGreen, width: 2),
+              ),
+              child: ClipOval(
+                child: state.profileImage != null
+                    ? Image.file(
+                        File(state.profileImage!.path),
+                        fit: BoxFit.cover,
+                      )
+                    : Icon(
+                        Icons.person_rounded,
+                        size: 60,
+                        color: AppColors.darkIconSecondary,
+                      ),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: AppColors.accentGreen,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.darkBackground, width: 2),
+                ),
+                child: const Icon(
+                  Icons.camera_alt_rounded,
+                  size: 18,
+                  color: AppColors.black,
+                ),
+              ),
+            ),
+            if (state.profileImage != null)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: GestureDetector(
+                  onTap: () => ref.read(signupProvider.notifier).removeImage(),
+                  child: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: AppColors.error,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.darkBackground,
+                        width: 2,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.close_rounded,
+                      size: 16,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -300,11 +393,11 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildContinueButton() {
+  Widget _buildContinueButton(bool isLoading) {
     return CustomButton(
       text: 'CONTINUE',
       onPressed: _handleContinue,
-      isLoading: _isLoading,
+      isLoading: isLoading,
     );
   }
 

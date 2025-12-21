@@ -4,7 +4,7 @@ class AppConstants {
   AppConstants._();
 
   // App Information
-  static const String appName = 'EduApp';
+  static const String appName = 'Global Ders';
   static const String appVersion = '1.0.0';
 
   // API & Network

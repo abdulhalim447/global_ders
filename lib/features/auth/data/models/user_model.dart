@@ -7,26 +7,40 @@ class UserModel extends User {
     required super.name,
     required super.email,
     super.avatarUrl,
+    super.accessToken,
   });
 
-  /// Create UserModel from JSON
+  /// Create UserModel from JSON (API response)
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] as String,
+      id: json['id'] as int,
       name: json['name'] as String,
       email: json['email'] as String,
-      avatarUrl: json['avatarUrl'] as String?,
+      avatarUrl: json['profile_image'] as String?,
+      accessToken: json['access_token'] as String?,
     );
   }
 
-  /// Convert UserModel to JSON
+  /// Convert UserModel to JSON (for local storage)
   Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name, 'email': email, 'avatarUrl': avatarUrl};
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'profile_image': avatarUrl,
+      'access_token': accessToken,
+    };
   }
 
   /// Create User entity from UserModel
   User toEntity() {
-    return User(id: id, name: name, email: email, avatarUrl: avatarUrl);
+    return User(
+      id: id,
+      name: name,
+      email: email,
+      avatarUrl: avatarUrl,
+      accessToken: accessToken,
+    );
   }
 
   /// Create UserModel from User entity
@@ -36,6 +50,7 @@ class UserModel extends User {
       name: user.name,
       email: user.email,
       avatarUrl: user.avatarUrl,
+      accessToken: user.accessToken,
     );
   }
 }

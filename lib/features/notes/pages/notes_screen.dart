@@ -32,32 +32,7 @@ class NotesScreen extends ConsumerWidget {
   Widget _buildHeader(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppConstants.paddingMedium),
-      child: Row(
-        children: [
-          // Back button (optional)
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: AppColors.darkSurface,
-              borderRadius: BorderRadius.circular(
-                AppConstants.borderRadiusSmall,
-              ),
-            ),
-            child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                color: AppColors.darkIconPrimary,
-              ),
-            ),
-          ),
-          const SizedBox(width: AppConstants.paddingMedium),
-          Text('Notes', style: AppTextStyles.h4()),
-        ],
-      ),
+      child: Text('Notes', style: AppTextStyles.h4()),
     );
   }
 
