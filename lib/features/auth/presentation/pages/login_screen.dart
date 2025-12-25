@@ -155,7 +155,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildLogo() {
-    return Container(
+    return SizedBox(
       width: 60,
       height: 60,
 

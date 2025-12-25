@@ -158,7 +158,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _buildLogo() {
-    return Container(
+    return SizedBox(
       width: 60,
       height: 60,
       child: ClipOval(

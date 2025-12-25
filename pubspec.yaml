@@ -84,6 +84,11 @@ flutter:
   assets:
     - assets/logo/
     - assets/
+    - assets/pdf/modül-1/
+    - assets/pdf/modül-2/
+    - assets/pdf/modül-3/
+    - assets/pdf/modül-4/
+    - assets/pdf/modül-5/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

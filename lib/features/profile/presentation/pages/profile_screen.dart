@@ -22,7 +22,7 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  bool _isDarkMode = true;
+  final bool _isDarkMode = true;
 
   /// Open app store for rating
   Future<void> _rateApp() async {

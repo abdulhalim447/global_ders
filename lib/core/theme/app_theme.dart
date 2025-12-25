@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 import '../constants/app_constants.dart';
@@ -21,12 +20,10 @@ class AppTheme {
         primary: AppColors.accentGreen,
         secondary: AppColors.accentGreenDark,
         surface: AppColors.darkSurface,
-        background: AppColors.darkBackground,
         error: AppColors.error,
         onPrimary: AppColors.black,
         onSecondary: AppColors.black,
         onSurface: AppColors.darkTextPrimary,
-        onBackground: AppColors.darkTextPrimary,
         onError: AppColors.white,
       ),
 
@@ -176,14 +173,14 @@ class AppTheme {
 
       // Switch
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.accentGreen;
           }
           return AppColors.darkTextTertiary;
         }),
-        trackColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.accentGreen.withOpacity(0.5);
           }
           return AppColors.darkSurfaceVariant;
@@ -203,12 +200,10 @@ class AppTheme {
         primary: AppColors.accentGreen,
         secondary: AppColors.accentGreenDark,
         surface: AppColors.lightSurface,
-        background: AppColors.lightBackground,
         error: AppColors.error,
         onPrimary: AppColors.black,
         onSecondary: AppColors.black,
         onSurface: AppColors.lightTextPrimary,
-        onBackground: AppColors.lightTextPrimary,
         onError: AppColors.white,
       ),
 
